@@ -6,104 +6,99 @@
     <title>SAMPA - Sistema de Análise e Monitoramento</title>
     
     <style>
-        /* Estilos Globais */
-        body, html {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #fff;
-            height: 100%;
-        }
+        /* Estilos Globais e Layout (sem alterações) */
+        :root{--primary-color:#0d6efd;--light-gray:#f8f9fa;--border-color:#dee2e6;--text-color:#6c757d;--text-dark:#212529;--green:#198754;--orange:#fd7e14}body,html{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background-color:#f0f2f5;height:100%}*{box-sizing:border-box}.app-layout{display:flex;flex-direction:column;height:100vh}.main-header{text-align:left;padding:10px 20px;border-bottom:1px solid var(--border-color);background-color:#fff;flex-shrink:0}.main-header h1{margin:0;font-size:16px;font-weight:500;color:var(--text-dark)}.content-wrapper{flex-grow:1;overflow:hidden;display:flex;flex-direction:column}.page{display:none;height:100%;width:100%;overflow:auto}.page.active{display:flex;flex-direction:column}
 
-        /* Layout Principal */
-        .app-layout {
+        /* Estilos do Kanban (sem alterações) */
+        .board-container{display:flex;padding:20px;overflow-x:auto;width:100%;align-items:flex-start;justify-content:center;background-color:#fff}.status-message{width:100%;text-align:center;padding:40px;font-size:18px;color:#666}.error{color:#d9534f}.kanban-column{flex:0 0 240px;display:flex;flex-direction:column;margin:0 8px;padding-top:50px;position:relative}.column-header-wrapper{position:relative;display:flex;flex-direction:column;align-items:center;margin-bottom:20px}.column-connector-line{position:absolute;top:25px;left:-50%;width:100%;height:2px;background-color:#ccc;z-index:1}.kanban-column:first-child .column-connector-line{display:none}.column-header{text-align:center;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%}.header-icon{width:50px;height:50px;border-radius:50%;display:flex;justify-content:center;align-items:center;margin-bottom:10px;box-shadow:0 2px 4px rgba(0,0,0,.1)}.header-icon span{font-size:24px;color:#fff}.column-header h3{font-size:15px;font-weight:700;color:#333;margin:0}.column-header h4{font-size:12px;color:#555;font-weight:400;margin-top:4px}.card-list{list-style-type:none;padding:0;margin:0;flex-grow:1;overflow-y:auto;min-height:100px}.card-list li{margin-bottom:10px}.kanban-card{background-color:#fffbef;border:1px solid #e0e0e0;border-radius:3px;padding:8px 12px;cursor:grab;box-shadow:0 1px 2px rgba(0,0,0,.1);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;display:flex;flex-direction:column;gap:8px}.card-row{display:flex;justify-content:space-between;align-items:center;width:100%}.card-id{font-weight:700;font-size:14px;color:#333}.card-days{font-size:13px;color:#555;display:flex;align-items:center}.arrow-icon{font-size:8px;margin-right:5px;color:#888}.title-row{align-items:flex-end}.card-title{font-size:14px;color:#333;margin:0;line-height:1.2;flex-grow:1}.footer-row{font-size:12px;color:#777}.status-tag{background-color:#f0f0f0;border:1px solid #ccc;padding:1px 4px;border-radius:3px}
+
+        /* --- ✅ ESTILOS ATUALIZADOS PARA A PÁGINA DE ATIVIDADES --- */
+        .atividades-container { padding: 25px; width: 100%; max-width: 900px; margin: 0 auto; }
+        .atividades-toolbar { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
+        .atividades-toolbar .search-input { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 14px; }
+        .atividades-card-list { display: flex; flex-direction: column; gap: 15px; }
+        .atividade-card { display: flex; background-color: white; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden; }
+        
+        /* Lado Esquerdo do Card */
+        .card-left {
+            flex: 0 0 220px; /* Largura fixa */
+            padding: 15px;
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            justify-content: center;
+            gap: 10px;
         }
-        .main-header {
-            text-align: left;
-            padding: 10px 20px;
-            border-bottom: 1px solid #ddd;
-            background-color: #fafafa;
-            flex-shrink: 0; /* Impede que o header encolha */
+        .proad-info .proad-label {
+            font-size: 11px;
+            color: var(--text-color);
+            text-transform: uppercase;
+            margin-bottom: 2px;
         }
-        .main-header h1 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
+        .proad-info .proad-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
         }
-        .content-wrapper {
-            flex-grow: 1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column; /* Organiza as páginas verticalmente */
-        }
-
-        /* ✅ ESTILO ADICIONADO: Contêiner das Páginas */
-        .page {
-            display: none; /* Esconde todas as páginas por padrão */
-            height: 100%;
-            width: 100%;
-        }
-        .page.active {
-            display: flex; /* Mostra apenas a página ativa */
-        }
-
-        /* ✅ ESTILO MODIFICADO: Centraliza o Kanban */
-        .board-container {
-            display: flex;
-            padding: 20px;
-            overflow-x: auto;
-            background-color: #ffffff;
-            width: 100%;
-            align-items: flex-start;
-            justify-content: center; /* Centraliza as colunas */
-        }
-
-        /* Coluna do Kanban */
-        .kanban-column {
-            flex: 0 0 240px;
-            display: flex;
-            flex-direction: column;
-            margin: 0 8px;
-            padding-top: 50px;
-            position: relative;
+        .card-left-description {
+            font-size: 13px;
+            color: var(--text-color);
+            line-height: 1.4;
         }
         
-        /* ... (restante do seu CSS original, sem alterações) ... */
-        .status-message{width:100%;text-align:center;padding:40px;font-size:18px;color:#666}.error{color:#d9534f}.column-header-wrapper{position:relative;display:flex;flex-direction:column;align-items:center;margin-bottom:20px}.column-connector-line{position:absolute;top:25px;left:-50%;width:100%;height:2px;background-color:#ccc;z-index:1}.kanban-column:first-child .column-connector-line{display:none}.column-header{text-align:center;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%}.header-icon{width:50px;height:50px;border-radius:50%;display:flex;justify-content:center;align-items:center;margin-bottom:10px;box-shadow:0 2px 4px rgba(0,0,0,.1)}.header-icon span{font-size:24px;color:#fff}.column-header h3{font-size:15px;font-weight:700;color:#333;margin:0}.column-header h4{font-size:12px;color:#555;font-weight:400;margin-top:4px}.card-list{list-style-type:none;padding:0;margin:0;flex-grow:1;overflow-y:auto;min-height:100px}.card-list li{margin-bottom:10px}.kanban-card{background-color:#fffbef;border:1px solid #e0e0e0;border-radius:3px;padding:8px 12px;cursor:grab;box-shadow:0 1px 2px rgba(0,0,0,.1);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;display:flex;flex-direction:column;gap:8px}.card-row{display:flex;justify-content:space-between;align-items:center;width:100%}.card-id{font-weight:700;font-size:14px;color:#333}.card-days{font-size:13px;color:#555;display:flex;align-items:center}.arrow-icon{font-size:8px;margin-right:5px;color:#888}.title-row{align-items:flex-end}.card-title{font-size:14px;color:#333;margin:0;line-height:1.2;flex-grow:1}.footer-row{font-size:12px;color:#777}.status-tag{background-color:#f0f0f0;border:1px solid #ccc;padding:1px 4px;border-radius:3px}.bottom-navbar{width:100%;background-color:#f8f9fa;border-top:1px solid #dee2e6;padding:5px 0;position:fixed;bottom:0;left:0;z-index:1000;flex-shrink:0}.bottom-navbar ul{display:flex;justify-content:center;align-items:center;list-style:none;margin:0;padding:0}.bottom-navbar li a{padding:10px 20px;text-decoration:none;color:#495057;font-weight:500;font-size:14px;border-radius:4px;cursor:pointer}.bottom-navbar li a.active{background-color:#e9ecef;color:#0056b3}
+        /* Lado do Meio do Card */
+        .card-middle { flex: 1 1 50%; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .card-title { font-size: 16px; font-weight: 600; color: var(--text-dark); margin: 0 0 5px 0; }
+        .tags-container { display: flex; flex-wrap: wrap; gap: 5px; }
+        .tag { background-color: var(--light-gray); color: var(--text-color); font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 10px; }
+        
+        /* Lado Direito do Card */
+        .card-right { flex: 0 0 200px; padding: 15px; background-color: var(--light-gray); display: flex; flex-direction: column; justify-content: space-between; font-size: 13px; }
+        .info-item { margin-bottom: 10px; }
+        .info-label { font-weight: 600; color: var(--text-dark); }
+        .info-value { color: var(--text-color); }
+        .btn-details { width: 100%; background-color: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 8px; border-radius: 6px; font-weight: 500; cursor: pointer; margin-top: 10px; }
+        .btn-details:hover { background-color: #e9f2ff; }
+        /* --- FIM DOS ESTILOS ATUALIZADOS --- */
+        
+        /* Barra de Navegação */
+        .bottom-navbar{width:100%;background-color:var(--light-gray);border-top:1px solid var(--border-color);padding:5px 0;position:fixed;bottom:0;left:0;z-index:1000;flex-shrink:0}.bottom-navbar ul{display:flex;justify-content:center;align-items:center;list-style:none;margin:0;padding:0}.bottom-navbar li a{padding:10px 20px;text-decoration:none;color:var(--text-color);font-weight:500;font-size:14px;border-radius:4px;cursor:pointer}.bottom-navbar li a.active{background-color:#e9ecef;color:var(--primary-color)}
     </style>
 </head>
 <body>
     <div id="app" class="app-layout">
-        <header class="main-header">
-            <h1>SAMPA - Sistema de Análise e Monitoramento do Planejamento de Aquisições</h1>
-        </header>
+        <header class="main-header"><h1>SAMPA - Sistema de Análise e Monitoramento do Planejamento de Aquisições</h1></header>
         
         <main class="content-wrapper">
             <div id="page-andamentos" class="page active">
-                <div id="kanban-board" class="board-container">
-                    <div class="status-message">Carregando dados...</div>
-                </div>
+                <div id="kanban-board" class="board-container"><div class="status-message">Carregando dados...</div></div>
             </div>
 
             <div id="page-riscos" class="page">
                 <div class="status-message"><h1>Página de Riscos</h1><p>Esta tela está em desenvolvimento.</p></div>
             </div>
 
-            <div id="page-atividades" class="page">
-                <div class="status-message"><h1>Página de Atividades</h1><p>Esta tela está em desenvolvimento.</p></div>
+            <div id="page-atividades" class="page" data-initialized="false">
+                <div class="atividades-container">
+                    <header class="atividades-toolbar">
+                        <input type="search" placeholder="Pesquisar atividades..." class="search-input">
+                        </header>
+                    <div class="atividades-card-list">
+                        <div class="status-message">Carregando atividades...</div>
+                    </div>
+                </div>
             </div>
-
-            </main>
+            
+            <div id="page-contratos" class="page"><div class="status-message"><h1>Página de Contratos</h1><p>Esta tela está em desenvolvimento.</p></div></div>
+            <div id="page-gestao" class="page"><div class="status-message"><h1>Página de Gestão</h1><p>Esta tela está em desenvolvimento.</p></div></div>
+        </main>
         
         <nav class="bottom-navbar">
             <ul>
                 <li><a data-target="page-andamentos" class="active">Andamentos</a></li>
                 <li><a data-target="page-atividades">Atividades</a></li>
-                <li><a href="#">Contratos</a></li>
-                <li><a href="#">Gestão</a></li>
+                <li><a data-target="page-contratos">Contratos</a></li>
+                <li><a data-target="page-gestao">Gestão</a></li>
                 <li><a data-target="page-riscos">Riscos</a></li>
             </ul>
         </nav>
@@ -113,39 +108,115 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // URL única para os dados
             const API_URL = "https://script.google.com/macros/s/AKfycbw0V2iYm5m1Uw_1sX39rtq5CgG9XFAZwsYvV6pdnb-346KtOE6D_ndSikqbN0GZjioe/exec";
-            const boardElement = document.getElementById('kanban-board');
 
-            // ✅ LÓGICA DE ROTEAMENTO ADICIONADA
+            // --- LÓGICA DE ROTEAMENTO ATUALIZADA ---
             const navLinks = document.querySelectorAll('.bottom-navbar a[data-target]');
             const pages = document.querySelectorAll('.page');
-
+            
             function showPage(targetId) {
-                // Esconde todas as páginas
                 pages.forEach(page => page.classList.remove('active'));
-                // Mostra a página alvo
                 const targetPage = document.getElementById(targetId);
-                if (targetPage) {
+                if (targetPage) { 
                     targetPage.classList.add('active');
+                    
+                    // Se for a página de atividades e ela ainda não foi carregada, carregue os dados
+                    if (targetId === 'page-atividades' && targetPage.dataset.initialized === 'false') {
+                        initAtividadesPage();
+                    }
                 }
             }
 
             navLinks.forEach(link => {
                 link.addEventListener('click', (event) => {
-                    event.preventDefault(); // Impede que o link navegue para '#'
-                    
-                    // Atualiza a classe 'active' nos links
+                    event.preventDefault();
                     navLinks.forEach(l => l.classList.remove('active'));
                     link.classList.add('active');
-                    
-                    // Mostra a página correspondente
                     const targetId = link.getAttribute('data-target');
                     showPage(targetId);
                 });
             });
 
-            // ... (resto do seu script original, sem alterações) ...
-            const faseParaColunaId={"Gestão do Contrato":"cca_gestor","Seleção de Fornecedor":"licitacao","Planejamento da Contratação":"contratacoes"};function formatarProcessoId(e){if(!e)return null;const t=String(e).substring(6);return parseInt(t,10)}function processarDadosDaApi(e){const t={cca_gestor:{id:"cca_gestor",title:"CCA / gestor",subtitle:"Gestão do Contrato",icon:"📋",color:"#4C6EF5",cards:[]},licitacao:{id:"licitacao",title:"Licitação",subtitle:"Seleção Fornecedor",icon:"🏆",color:"#FD7E14",cards:[]},contratacoes:{id:"contratacoes",title:"Contratações",subtitle:"Planejamento",icon:"✍️",color:"#845EF7",cards:[]}};if(!Array.isArray(e))return console.error("Os dados recebidos da API não são um array:",e),[];return e.forEach(e=>{const o=e["Fase Atual"],a=faseParaColunaId[o];if(a&&t[a]){const o=e["Data Contrato"],n=o?new Date(o).toLocaleDateString("pt-BR"):"N/D";t[a].cards.push({id:formatarProcessoId(e["Processo Administrativo"]),title:e["Andamento - Objeto resumido"],days:e["Duração (dias)"],dateInfo:n,statusTag:e.Status})}}),Object.values(t)}function renderizarPainel(e){if(boardElement.innerHTML="",0===e.length)return void(boardElement.innerHTML='<div class="status-message">Nenhum dado encontrado para exibir.</div>');e.forEach(e=>{const t=document.createElement("div");t.className="kanban-column",t.innerHTML=`\n                        <div class="column-header-wrapper">\n                            <div class="column-connector-line"></div>\n                            <div class="column-header">\n                                <div class="header-icon" style="background-color: ${e.color};">\n                                    <span>${e.icon}</span>\n                                </div>\n                                <h3>${e.title}</h3>\n                                <h4>${e.subtitle}</h4>\n                            </div>\n                        </div>\n                        <ul class="card-list" id="column-${e.id}"></ul>\n                    `,boardElement.appendChild(t);const o=t.querySelector(".card-list");e.cards.forEach(e=>{const t=document.createElement("li");t.innerHTML=`\n                            <div class="kanban-card" data-card-id="${e.id}">\n                                <div class="card-row">\n                                    <span class="card-id">${e.id}</span>\n                                    <span class="card-days">\n                                        <span class="arrow-icon">▶</span>\n                                        ${e.days} d\n                                    </span>\n                                </div>\n                                <div class="card-row title-row">\n                                    <p class="card-title">${e.title}</p>\n                                </div>\n                                <div class="card-row footer-row">\n                                    <span class="card-date-info">${e.dateInfo}</span>\n                                    <span class="status-tag">${e.statusTag}</span>\n                                </div>\n                            </div>\n                        `,o.appendChild(t)})});const t=document.querySelectorAll(".card-list");t.forEach(e=>{new Sortable(e,{group:"kanban",animation:150})})}async function fetchBoardData(){try{const e=await fetch(API_URL);if(!e.ok)throw new Error(`Erro na rede: ${e.statusText}`);const t=await e.json(),o=processarDadosDaApi(t);renderizarPainel(o)}catch(e){console.error("Falha ao buscar ou processar dados da API:",e),boardElement.innerHTML='<div class="status-message error">Não foi possível carregar os dados do painel.</div>'}}fetchBoardData()
+            // Função para formatar o ID do PROAD
+            function formatarProcessoId(processoNum) {
+                if (!processoNum) return 'N/D';
+                const processoStr = String(processoNum);
+                const parteRelevante = processoStr.substring(6);
+                return parseInt(parteRelevante, 10);
+            }
+
+            // --- LÓGICA DO KANBAN ---
+            const boardElement = document.getElementById('kanban-board');
+            if (boardElement) {
+                // (Código do Kanban continua o mesmo, mas agora usa a função de formatar ID de cima)
+                const faseParaColunaId={"Gestão do Contrato":"cca_gestor","Seleção de Fornecedor":"licitacao","Planejamento da Contratação":"contratacoes"};function processarDadosDaApi(e){const t={cca_gestor:{id:"cca_gestor",title:"CCA / gestor",subtitle:"Gestão do Contrato",icon:"📋",color:"#4C6EF5",cards:[]},licitacao:{id:"licitacao",title:"Licitação",subtitle:"Seleção Fornecedor",icon:"🏆",color:"#FD7E14",cards:[]},contratacoes:{id:"contratacoes",title:"Contratações",subtitle:"Planejamento",icon:"✍️",color:"#845EF7",cards:[]}};if(!Array.isArray(e))return console.error("Os dados recebidos da API não são um array:",e),[];return e.forEach(e=>{const o=e["Fase Atual"],a=faseParaColunaId[o];if(a&&t[a]){const o=e["Data Contrato"],n=o?new Date(o).toLocaleDateString("pt-BR"):"N/D";t[a].cards.push({id:formatarProcessoId(e["Processo Administrativo"]),title:e["Andamento - Objeto resumido"],days:e["Duração (dias)"],dateInfo:n,statusTag:e.Status})}}),Object.values(t)}function renderizarPainel(e){if(boardElement.innerHTML="",0===e.length)return void(boardElement.innerHTML='<div class="status-message">Nenhum dado encontrado para exibir.</div>');e.forEach(e=>{const t=document.createElement("div");t.className="kanban-column",t.innerHTML=`<div class="column-header-wrapper"><div class="column-connector-line"></div><div class="column-header"><div class="header-icon" style="background-color: ${e.color};"><span>${e.icon}</span></div><h3>${e.title}</h3><h4>${e.subtitle}</h4></div></div><ul class="card-list" id="column-${e.id}"></ul>`,boardElement.appendChild(t);const o=t.querySelector(".card-list");e.cards.forEach(e=>{const t=document.createElement("li");t.innerHTML=`<div class="kanban-card" data-card-id="${e.id}"><div class="card-row"><span class="card-id">${e.id}</span><span class="card-days"><span class="arrow-icon">▶</span> ${e.days} d</span></div><div class="card-row title-row"><p class="card-title">${e.title}</p></div><div class="card-row footer-row"><span class="card-date-info">${e.dateInfo}</span><span class="status-tag">${e.statusTag}</span></div></div>`,o.appendChild(t)})});const t=document.querySelectorAll(".card-list");t.forEach(e=>{new Sortable(e,{group:"kanban",animation:150})})}async function fetchBoardData(){try{const e=await fetch(API_URL);if(!e.ok)throw new Error(`Erro na rede: ${e.statusText}`);const t=await e.json(),o=processarDadosDaApi(t);renderizarPainel(o)}catch(e){console.error("Falha ao buscar ou processar dados da API:",e),boardElement.innerHTML='<div class="status-message error">Não foi possível carregar os dados do painel.</div>'}}fetchBoardData()
+            }
+
+            // --- ✅ LÓGICA ATUALIZADA PARA A PÁGINA DE ATIVIDADES ---
+            const atividadesListElement = document.querySelector('.atividades-card-list');
+            
+            function renderizarCardsDeAtividade(dados) {
+                atividadesListElement.innerHTML = ''; // Limpa a mensagem de "carregando"
+                dados.forEach(item => {
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'atividade-card';
+
+                    // Mapeia os dados do JSON para os cards
+                    const proad = formatarProcessoId(item["Processo Administrativo"]);
+                    const descricao = item["Andamento - Objeto resumido"] || "Sem descrição";
+                    const titulo = item["Demanda"] || "Atividade sem título";
+                    const tipo = item["Tipo"] || "Geral";
+                    const especialidade = item["Especialidade"] || "N/A";
+                    const responsavel = item["Demandante"] || "Não definido";
+                    const entrega = item["Data Contrato"] ? new Date(item["Data Contrato"]).toLocaleDateString('pt-BR') : 'A definir';
+
+                    cardElement.innerHTML = `
+                        <div class="card-left">
+                            <div class="proad-info">
+                                <div class="proad-label">PROAD</div>
+                                <div class="proad-number">${proad}</div>
+                            </div>
+                            <p class="card-left-description">${descricao}</p>
+                        </div>
+                        <div class="card-middle">
+                            <p class="card-title">${titulo}</p>
+                            <div class="tags-container">
+                                <span class="tag">${tipo}</span>
+                                <span class="tag">${especialidade}</span>
+                            </div>
+                        </div>
+                        <div class="card-right">
+                            <div>
+                                <div class="info-item">
+                                    <div class="info-label">Responsável</div>
+                                    <div class="info-value">${responsavel}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Entrega</div>
+                                    <div class="info-value">${entrega}</div>
+                                </div>
+                            </div>
+                            <button class="btn-details">Ver Detalhes</button>
+                        </div>
+                    `;
+                    atividadesListElement.appendChild(cardElement);
+                });
+            }
+            
+            async function initAtividadesPage() {
+                const page = document.getElementById('page-atividades');
+                page.dataset.initialized = 'true'; // Marca como inicializada
+                try {
+                    const response = await fetch(API_URL);
+                    if (!response.ok) throw new Error('Falha na rede');
+                    const apiData = await response.json();
+                    renderizarCardsDeAtividade(apiData);
+                } catch (e) {
+                    atividadesListElement.innerHTML = `<div class="status-message error">Não foi possível carregar as atividades.</div>`;
+                    console.error("Erro ao buscar atividades:", e);
+                }
+            }
         });
     </script>
 </body>
